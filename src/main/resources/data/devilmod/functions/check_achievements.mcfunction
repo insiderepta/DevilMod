@@ -1,0 +1,1 @@
+execute as @a[advancements={devilmod:root=true,devilmod:devil_sees_you=true,devilmod:is_this_a_fortress=true,devilmod:it_was_hard=true,devilmod:torture_weapon=true}] run advancement grant @s only devilmod:the_end

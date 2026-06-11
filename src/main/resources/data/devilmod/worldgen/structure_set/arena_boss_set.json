@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "devilmod:arena_boss",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 35,
+    "separation": 12,
+    "salt": 42424242,
+    "locate_offset": [0, 0, 0]
+  }
+}

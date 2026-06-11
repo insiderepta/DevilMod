@@ -1,0 +1,25 @@
+{
+  "parent": "devilmod:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:ender_eye"
+    },
+    "title": {
+      "text": "Дьявол видит тебя."
+    },
+    "description": {
+      "text": "Ты почувствовал чей-то взгляд."
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "x": 0,
+    "y": 0
+  },
+  "criteria": {
+    "trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

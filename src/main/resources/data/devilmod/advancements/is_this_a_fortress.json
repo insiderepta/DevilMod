@@ -1,0 +1,29 @@
+{
+  "parent": "devilmod:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:nether_bricks"
+    },
+    "title": {
+      "text": "Это точно крепость?"
+    },
+    "description": {
+      "text": "Найдите арену Проклятого богом дьявола"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "x": 2,
+    "y": -1
+  },
+  "criteria": {
+    "entered_arena": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "location": {
+          "structure": "devilmod:arena_boss"
+        }
+      }
+    }
+  }
+}

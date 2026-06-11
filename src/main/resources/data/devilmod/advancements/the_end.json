@@ -1,0 +1,25 @@
+{
+  "parent": "devilmod:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:dragon_head"
+    },
+    "title": {
+      "text": "Это конец.",
+      "color": "red"
+    },
+    "description": {
+      "text": "Выполните все достижения Devil"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "x": 6,
+    "y": 0
+  },
+  "criteria": {
+    "trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

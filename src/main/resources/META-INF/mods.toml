@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="devilmod"
+version="1.0.0"
+displayName="Devil Mod"
+authors="insideepta, rmd_pr"
+description='''
+Inside the Devil Mod!
+'''
+
+[[dependencies.devilmod]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.devilmod]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1]"
+ordering="NONE"
+side="BOTH"

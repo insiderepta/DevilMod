@@ -1,0 +1,12 @@
+{
+  "boss_theme": {
+    "category": "music",
+    "subtitle": "subtitles.devilmod.boss_theme",
+    "sounds": [
+      {
+        "name": "devilmod:boss_theme",
+        "stream": true
+      }
+    ]
+  }
+}
