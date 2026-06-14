@@ -19,4 +19,4 @@ public class ModEventBusEvents {
         // Внутри только такие вызовы:
         event.registerEntityRenderer(ModEntities.BOSS.get(), BossRenderer::new);
     }
-}
+}   

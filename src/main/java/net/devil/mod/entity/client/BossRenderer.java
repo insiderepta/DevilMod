@@ -52,7 +52,7 @@ public class BossRenderer extends GeoEntityRenderer<BossEntity> {
             if (activeMusic == null || !mc.getSoundManager().isActive(activeMusic)) {
 
                 // Создаем событие звука напрямую по его ID из sounds.json
-                SoundEvent bossSound = SoundEvent.createVariableRangeEvent(new ResourceLocation(DevilMod.MOD_ID, "boss_theme"));
+                SoundEvent bossSound = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(DevilMod.MOD_ID, "boss_theme"));
 
                 // Создаем наш тикающий экземпляр музыки и запускаем его
                 activeMusic = new BossMusicInstance(bossSound, animatable);

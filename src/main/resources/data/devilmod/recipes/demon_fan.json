@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "ender_pearl",
+  "key": {
+    "#": {
+      "item": "minecraft:golden_apple"
+    },
+    "a": {
+      "item": "minecraft:lava_bucket"
+    },
+    "b": {
+      "item": "minecraft:netherrack"
+    }
+  },
+  "pattern": [
+    "bab",
+    "a#a",
+    "bab"
+  ],
+  "result": {
+    "item": "devilmod:demon_fan"
+  },
+  "show_notification": true
+}

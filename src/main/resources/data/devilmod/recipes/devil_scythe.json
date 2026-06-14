@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "minecraft:blaze_rod"
+    },
+    "a": {
+      "item": "devilmod:devil_core"
+    },
+    "b": {
+      "item": "minecraft:netherrack"
+    }
+  },
+  "pattern": [
+    " ba",
+    "b #",
+    "  #"
+  ],
+  "result": {
+    "item": "devilmod:devil_scythe"
+  },
+  "show_notification": true
+}

@@ -22,6 +22,15 @@ public class ModEntities {
                     .sized(1.2F, 3.0F) // 1.2 блока в ширину, 3.0 блока в высоту
                     .build("boss"));
 
+    public static final RegistryObject<EntityType<DemonFanEntity>> DEMON_FAN =
+            ENTITY_TYPES.register("demon_fan",
+                    () -> EntityType.Builder.<DemonFanEntity>of(DemonFanEntity::new, MobCategory.MISC)
+                            .sized(0.25F, 0.25F) // Размер как у эндер-пёрла
+                            .clientTrackingRange(4)
+                            .updateInterval(10)
+                            .build("demon_fan"));
+
+
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);
     }

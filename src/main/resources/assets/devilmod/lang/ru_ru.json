@@ -1,3 +1,6 @@
 {
-  "entity.devilmod.boss": "\u00A7cКровавый Дьявол"
+  "entity.devilmod.boss": "\u00A7cКровавый Дьявол",
+  "entity.devilmod.servant": "§cПрислуга",
+  "item.devilmod.demon_fan": "Веер дьявола",
+  "item.devilmod.devil_core": "Ядро дьявола"
 }

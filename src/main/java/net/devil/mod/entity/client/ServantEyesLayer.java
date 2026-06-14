@@ -14,7 +14,7 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class ServantEyesLayer extends GeoRenderLayer<ServantEntity> {
     // Жёстко прописываем путь к нашей текстуре глаз
-    private static final ResourceLocation GLOW_TEXTURE = new ResourceLocation(DevilMod.MOD_ID, "textures/entity/servant_glowing.png");
+    private static final ResourceLocation GLOW_TEXTURE = ResourceLocation.fromNamespaceAndPath(DevilMod.MOD_ID, "textures/entity/servant_glowing.png");
 
     public ServantEyesLayer(GeoRenderer<ServantEntity> entityRendererIn) {
         super(entityRendererIn);

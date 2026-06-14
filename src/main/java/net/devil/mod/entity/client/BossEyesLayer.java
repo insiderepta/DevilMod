@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class BossEyesLayer extends GeoRenderLayer<BossEntity> {
-    private static final ResourceLocation GLOW_TEXTURE = new ResourceLocation(DevilMod.MOD_ID, "textures/entity/boss_glowing.png");
+    private static final ResourceLocation GLOW_TEXTURE = ResourceLocation.fromNamespaceAndPath(DevilMod.MOD_ID, "textures/entity/boss_glowing.png");
 
     public BossEyesLayer(GeoRenderer<BossEntity> entityRendererIn) {
         super(entityRendererIn);

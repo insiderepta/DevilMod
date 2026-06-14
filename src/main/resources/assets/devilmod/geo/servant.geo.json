@@ -26,18 +26,24 @@
 					]
 				},
 				{
-					"name": "right_arm",
+					"name": "left_arm",
 					"pivot": [0, 0, 0],
 					"cubes": [
 						{"origin": [4, 12, -2], "size": [4, 12, 4], "uv": [24, 16]}
 					]
 				},
 				{
-					"name": "left_arm",
+					"name": "right_arm",
 					"pivot": [0, 0, 0],
 					"cubes": [
 						{"origin": [-8, 12, -2], "size": [4, 12, 4], "uv": [0, 32]}
 					]
+				},
+				{
+					"name": "right_item",
+					"parent": "right_arm",
+					"pivot": [-6, 13, -1.8],
+					"rotation": [37.5, 0, 0]
 				},
 				{
 					"name": "right_leg",

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "devilmod:block/boss_spawner"
+    }
+  }
+}
