@@ -45,6 +45,6 @@ public class ServantRenderer extends GeoEntityRenderer<ServantEntity> {
 
                 super.renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);
             }
-        });
+         });
     }
 }

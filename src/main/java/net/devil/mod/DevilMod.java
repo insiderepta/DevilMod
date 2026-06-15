@@ -56,6 +56,13 @@ public class DevilMod {
     public static final RegistryObject<Item> DEVIL_CORE = ITEMS.register("devil_core",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
     // Добавил EPIC редкость, чтобы название предмета светилось фиолетовым цветом!
+
+    public static final RegistryObject<Item> DEVIL_SCYTHE = ITEMS.register("devil_scythe",
+            () -> new net.devil.mod.item.DevilScytheItem(new Item.Properties().fireResistant()));
+
+    public static final RegistryObject<Item> BOSS_SPAWN_EGG = ITEMS.register("boss_spawn_egg",
+            () -> new net.minecraftforge.common.ForgeSpawnEggItem(ModEntities.BOSS, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+
     public DevilMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
 
@@ -63,6 +70,9 @@ public class DevilMod {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
+        
+        // Регистрируем вкладку творческого режима
+        ModCreativeModeTabs.register(modEventBus);
 
         // Регистрируем самих мобов
         ModEntities.register(modEventBus);
@@ -79,6 +89,7 @@ public class DevilMod {
     private void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntities.BOSS.get(), BossEntity.createAttributes().build());
         event.put(ModEntities.SERVANT.get(), ServantEntity.createAttributes().build());
+        event.put(ModEntities.PLAYER_SERVANT.get(), net.devil.mod.entity.PlayerServantEntity.createAttributes().build());
     }
 
     private void onClientSetup(final FMLClientSetupEvent event) {
@@ -87,6 +98,9 @@ public class DevilMod {
 
         // Привязываем рендерер к Слуге
         EntityRenderers.register(ModEntities.SERVANT.get(), ServantRenderer::new);
+
+        // Привязываем рендерер к Слуге Игрока
+        EntityRenderers.register(ModEntities.PLAYER_SERVANT.get(), net.devil.mod.entity.client.PlayerServantRenderer::new);
 
         // ==========================================
         // НОВОЕ: Рендерер для летящего Веера

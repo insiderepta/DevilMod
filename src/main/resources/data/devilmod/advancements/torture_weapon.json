@@ -2,13 +2,13 @@
   "parent": "devilmod:root",
   "display": {
     "icon": {
-      "item": "minecraft:netherite_sword"
+      "item": "devilmod:devil_scythe"
     },
     "title": {
       "text": "Это оружие пыток!"
     },
     "description": {
-      "text": "Скрафтите меч из дьявола"
+      "text": "Скрафтите косу дьявола"
     },
     "frame": "goal",
     "show_toast": true,
@@ -17,8 +17,17 @@
     "y": 1
   },
   "criteria": {
-    "trigger": {
-      "trigger": "minecraft:impossible"
+    "has_scythe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "devilmod:devil_scythe"
+            ]
+          }
+        ]
+      }
     }
   }
 }

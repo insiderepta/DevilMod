@@ -47,8 +47,10 @@ public class BossEntity extends Monster implements GeoEntity {
     // НОВОЕ: ПРИЗЫВ СЛУГИ (CONSCRIPT)
     // ==========================================
     private static final EntityDataAccessor<Boolean> IS_CASTING_CONSCRIPT = SynchedEntityData.defineId(BossEntity.class, EntityDataSerializers.BOOLEAN);
-    private int conscriptCooldown = 400; // Кулдаун 20 секунд (можешь поменять потом)
+    private static final EntityDataAccessor<Boolean> IS_CONSCRIPT_DOWN = SynchedEntityData.defineId(BossEntity.class, EntityDataSerializers.BOOLEAN);
+    private int conscriptCooldown = 1200; // Кулдаун 60 секунд
     private int conscriptCastTimer = 0;
+    private ServantEntity activeServant = null;
 
     // ==========================================
     // НОВОЕ: РЫВОК
@@ -89,6 +91,7 @@ public class BossEntity extends Monster implements GeoEntity {
         this.entityData.define(IS_CASTING_LAVA, false);
         this.entityData.define(IS_DASHING, false); // По умолчанию рывок выключен
         this.entityData.define(IS_CASTING_CONSCRIPT, false);
+        this.entityData.define(IS_CONSCRIPT_DOWN, false);
         this.entityData.define(IS_CASTING_SPLASH, false);
     }
 
@@ -104,6 +107,9 @@ public class BossEntity extends Monster implements GeoEntity {
 
     public boolean isCastingConscript() { return this.entityData.get(IS_CASTING_CONSCRIPT); }
     public void setCastingConscript(boolean casting) { this.entityData.set(IS_CASTING_CONSCRIPT, casting); }
+
+    public boolean isConscriptDown() { return this.entityData.get(IS_CONSCRIPT_DOWN); }
+    public void setConscriptDown(boolean down) { this.entityData.set(IS_CONSCRIPT_DOWN, down); }
 
     public boolean isCastingSplash() { return this.entityData.get(IS_CASTING_SPLASH); }
     public void setCastingSplash(boolean casting) { this.entityData.set(IS_CASTING_SPLASH, casting); }
@@ -207,23 +213,33 @@ public class BossEntity extends Monster implements GeoEntity {
             }
             // 4. ПРИЗЫВ (CONSCRIPT)
             else if (this.isCastingConscript()) {
-                this.conscriptCastTimer--;
                 this.getNavigation().stop();
+                if (!this.isConscriptDown()) {
+                    this.conscriptCastTimer++;
+                    if (this.conscriptCastTimer == 34) {
+                        Player targetPlayer = this.level().getNearestPlayer(this, 50.0D);
 
-                // Спавним слугу на 34 тике из 68
-                if (this.conscriptCastTimer == 34) {
-                    Player targetPlayer = this.level().getNearestPlayer(this, 50.0D);
-
-                    ServantEntity servant = net.devil.mod.entity.ModEntities.SERVANT.get().create(this.level());
-                    if (servant != null) {
-                        servant.moveTo(this.getX() + 1.0, this.getY(), this.getZ() + 1.0, this.getYRot(), 0.0F);
-                        servant.setAsBossMinion(targetPlayer);
-                        this.level().addFreshEntity(servant);
+                        ServantEntity servant = net.devil.mod.entity.ModEntities.SERVANT.get().create(this.level());
+                        if (servant != null) {
+                            servant.moveTo(this.getX() + 1.0, this.getY(), this.getZ() + 1.0, this.getYRot(), 0.0F);
+                            servant.setAsBossMinion(targetPlayer);
+                            this.level().addFreshEntity(servant);
+                            this.activeServant = servant;
+                        }
+                    } else if (this.conscriptCastTimer > 34) {
+                        if (this.tickCount % 10 == 0) {
+                            this.heal(1.0F);
+                        }
+                        if (this.activeServant == null || !this.activeServant.isAlive() || this.activeServant.isRemoved()) {
+                            this.setConscriptDown(true);
+                            this.conscriptCastTimer = 0;
+                        }
                     }
-                }
-
-                if (this.conscriptCastTimer <= 0) {
-                    this.setCastingConscript(false);
+                } else {
+                    this.conscriptCastTimer++;
+                    if (this.conscriptCastTimer >= 30) {
+                        this.setCastingConscript(false);
+                    }
                 }
             }
             // 5. ЛАВА
@@ -256,9 +272,19 @@ public class BossEntity extends Monster implements GeoEntity {
                 if (targetPlayer != null) {
                     this.lookAt(targetPlayer, 30.0F, 30.0F);
 
-                    if (this.distanceToSqr(targetPlayer) > 3.0D) {
-                        net.minecraft.world.phys.Vec3 moveDir = targetPlayer.position().subtract(this.position()).normalize().scale(0.9D);
-                        this.setDeltaMovement(moveDir.x, this.getDeltaMovement().y, moveDir.z);
+                    if (this.dashTimer < 12) {
+                        if (this.distanceToSqr(targetPlayer) > 3.0D) {
+                            net.minecraft.world.phys.Vec3 moveDir = targetPlayer.position().subtract(this.position()).normalize().scale(1.5D);
+                            this.setDeltaMovement(moveDir.x, this.getDeltaMovement().y, moveDir.z);
+                        } else {
+                            this.setDeltaMovement(0, this.getDeltaMovement().y, 0);
+                        }
+                        
+                        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.5D))) {
+                            if (entity != this && !(entity instanceof ServantEntity) && entity instanceof Player) {
+                                entity.hurt(this.damageSources().mobAttack(this), 8.0F);
+                            }
+                        }
                     } else {
                         this.setDeltaMovement(0, this.getDeltaMovement().y, 0);
                     }
@@ -291,9 +317,13 @@ public class BossEntity extends Monster implements GeoEntity {
                     }
                     // ПРИОРИТЕТ 2: Призыв Слуги (Только если сплеш на кулдауне)
                     else if (this.conscriptCooldown <= 0) {
-                        this.setCastingConscript(true);
-                        this.conscriptCastTimer = 68;
-                        this.conscriptCooldown = 400; // Сразу сбрасываем кулдаун на 20 секунд
+                        if (this.random.nextInt(100) < 15) {
+                            this.setCastingConscript(true);
+                            this.setConscriptDown(false);
+                            this.conscriptCastTimer = 0;
+                            this.conscriptCooldown = 1200; // 60 секунд
+                            this.activeServant = null;
+                        }
                     }
                     // ПРИОРИТЕТ 3: Лава
                     else if (this.lavaCooldown <= 0) {
@@ -309,7 +339,7 @@ public class BossEntity extends Monster implements GeoEntity {
                             this.dashCooldown = 100; // Сразу сбрасываем кулдаун на 5 секунд
                         }
                     }
-                }
+                }   
             }
         }
 
@@ -358,7 +388,7 @@ public class BossEntity extends Monster implements GeoEntity {
         }
 
         // Если босс кастует или делает рывок, базовый контроллер просто "засыпает", отдавая контроль боевому
-        if (this.isCastingLava() || this.isDashing()) {
+        if (this.isCastingLava() || this.isDashing() || this.isCastingConscript()) {
             return PlayState.STOP;
         }
 
@@ -387,7 +417,11 @@ public class BossEntity extends Monster implements GeoEntity {
         }
         // Приоритет призыва
         if (this.isCastingConscript()) {
-            return state.setAndContinue(RawAnimation.begin().thenPlay("animation.devilboss.conscript"));
+            if (this.isConscriptDown()) {
+                return state.setAndContinue(RawAnimation.begin().thenPlay("animation.devilboss.conscriptdown"));
+            } else {
+                return state.setAndContinue(RawAnimation.begin().thenPlayAndHold("animation.devilboss.conscriptup"));
+            }
         }
         // Приоритет Сплеша
         if (this.isCastingSplash()) {

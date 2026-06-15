@@ -1,6 +1,10 @@
 {
   "entity.devilmod.boss": "\u00A7cКровавый Дьявол",
   "entity.devilmod.servant": "§cПрислуга",
-  "item.devilmod.demon_fan": "Веер дьявола",
-  "item.devilmod.devil_core": "Ядро дьявола"
+  "entity.devilmod.player_servant": "§cПрислуга Игрока",
+  "item.devilmod.demon_fan": "§6Веер дьявола",
+  "item.devilmod.devil_core": "Ядро дьявола",
+  "item.devilmod.devil_scythe": "§cКоса дьявола",
+  "item.devilmod.boss_spawn_egg": "§4Яйцо призыва Кровавого Дьявола",
+  "creativetab.devil_tab": "Devil Mod"
 }

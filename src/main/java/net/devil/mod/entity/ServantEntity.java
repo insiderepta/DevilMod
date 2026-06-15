@@ -58,10 +58,9 @@ public class ServantEntity extends Monster implements GeoEntity {
     // ==========================================
     public void setAsBossMinion(LivingEntity target) {
         this.isBossMinion = true;
-        this.minionTimer = 200;
+        this.minionTimer = 1200;
 
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.NETHERITE_SWORD));
-        this.setInvulnerable(true);
 
         // ИСПРАВЛЕНО: Добавляем нормальные боевые инстинкты!
         // Priority 2 - Атака
@@ -107,8 +106,7 @@ public class ServantEntity extends Monster implements GeoEntity {
         controllers.add(new software.bernie.geckolib.core.animation.AnimationController<>(this, "movement", 5, state -> {
             // Если моб движется (бежит или идет)
             if (state.isMoving()) {
-                // ВАЖНО: Замени "animation.servant.run" на точное название твоей анимации из Blockbench!
-                return state.setAndContinue(RawAnimation.begin().thenLoop("animation.servant.walk"));
+                return state.setAndContinue(RawAnimation.begin().thenLoop("animation.devilServant.walk"));
             }
             // Если стоит на месте, анимация останавливается (или можешь добавить сюда idle-анимацию)
             return PlayState.STOP;

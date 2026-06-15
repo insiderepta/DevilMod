@@ -7,8 +7,15 @@ modId="devilmod"
 version="1.0.0"
 displayName="Devil Mod"
 authors="insideepta, rmd_pr"
+logoFile="logo.png"
 description='''
-Inside the Devil Mod!
+Did you want to understand what kind of monster is watching you?
+Mod the Devil - will make up for this shortcoming.
+Fight the devil free the world from the devil's attack
+"You can! Believe in yourself." - 1nside_Ent4, rmd_pr
+
+Source code: https://github.com/insiderepta/DevilMod
+Discord (Russian-language channel):https://discord.gg/aH3XtBrvJz
 '''
 
 [[dependencies.devilmod]]

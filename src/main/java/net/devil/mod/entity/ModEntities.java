@@ -22,6 +22,11 @@ public class ModEntities {
                     .sized(1.2F, 3.0F) // 1.2 блока в ширину, 3.0 блока в высоту
                     .build("boss"));
 
+    public static final RegistryObject<EntityType<PlayerServantEntity>> PLAYER_SERVANT =
+            ENTITY_TYPES.register("player_servant", () -> EntityType.Builder.of(PlayerServantEntity::new, MobCategory.CREATURE)
+                    .sized(0.6F, 1.95F)
+                    .build("player_servant"));
+
     public static final RegistryObject<EntityType<DemonFanEntity>> DEMON_FAN =
             ENTITY_TYPES.register("demon_fan",
                     () -> EntityType.Builder.<DemonFanEntity>of(DemonFanEntity::new, MobCategory.MISC)

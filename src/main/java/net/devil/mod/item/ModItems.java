@@ -12,4 +12,7 @@ public class ModItems {
     // Регистрируем наш бесконечный предмет
     public static final RegistryObject<Item> DEMON_FAN = ITEMS.register("demon_fan",
             () -> new DemonFanItem(new Item.Properties()));
+
+    public static final RegistryObject<Item> DEVIL_SCYTHE = ITEMS.register("devil_scythe",
+            () -> new DevilScytheItem(new Item.Properties()));
 }
