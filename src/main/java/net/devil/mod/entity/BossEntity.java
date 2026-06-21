@@ -50,7 +50,7 @@ public class BossEntity extends Monster implements GeoEntity {
     private static final EntityDataAccessor<Boolean> IS_CONSCRIPT_DOWN = SynchedEntityData.defineId(BossEntity.class, EntityDataSerializers.BOOLEAN);
     private int conscriptCooldown = 1200; // Кулдаун 60 секунд
     private int conscriptCastTimer = 0;
-    private ServantEntity activeServant = null;
+    private final java.util.List<ServantEntity> activeServants = new java.util.ArrayList<>();
 
     // ==========================================
     // НОВОЕ: РЫВОК
@@ -211,26 +211,50 @@ public class BossEntity extends Monster implements GeoEntity {
                     this.setCastingSplash(false);
                 }
             }
-            // 4. ПРИЗЫВ (CONSCRIPT)
+// 4. ПРИЗЫВ (CONSCRIPT) - Анализатор игроков
             else if (this.isCastingConscript()) {
                 this.getNavigation().stop();
                 if (!this.isConscriptDown()) {
                     this.conscriptCastTimer++;
                     if (this.conscriptCastTimer == 34) {
-                        Player targetPlayer = this.level().getNearestPlayer(this, 50.0D);
+                        // Очищаем старый список на всякий случай
+                        this.activeServants.clear();
 
-                        ServantEntity servant = net.devil.mod.entity.ModEntities.SERVANT.get().create(this.level());
-                        if (servant != null) {
-                            servant.moveTo(this.getX() + 1.0, this.getY(), this.getZ() + 1.0, this.getYRot(), 0.0F);
-                            servant.setAsBossMinion(targetPlayer);
-                            this.level().addFreshEntity(servant);
-                            this.activeServant = servant;
+                        // Собираем всех игроков в радиусе 50 блоков
+                        java.util.List<Player> fightingPlayers = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(50.0D));
+
+                        // Спавним по 1 прислуге для КАЖДОГО игрока
+                        for (Player targetPlayer : fightingPlayers) {
+                            ServantEntity servant = net.devil.mod.entity.ModEntities.SERVANT.get().create(this.level());
+                            if (servant != null) {
+                                // Добавляем небольшой случайный разброс координат, чтобы они не спавнились в одной точке
+                                double spawnX = this.getX() + (this.random.nextDouble() - 0.5D) * 4.0D;
+                                double spawnZ = this.getZ() + (this.random.nextDouble() - 0.5D) * 4.0D;
+
+                                servant.moveTo(spawnX, this.getY(), spawnZ, this.getYRot(), 0.0F);
+                                servant.setAsBossMinion(targetPlayer); // Натравливаем конкретно на этого игрока
+                                this.level().addFreshEntity(servant);
+
+                                this.activeServants.add(servant); // Запоминаем созданного слугу
+                            }
                         }
+
+                        // Если игроков не было вообще, сразу сворачиваем способность
+                        if (this.activeServants.isEmpty()) {
+                            this.setConscriptDown(true);
+                            this.conscriptCastTimer = 0;
+                        }
+
                     } else if (this.conscriptCastTimer > 34) {
                         if (this.tickCount % 10 == 0) {
-                            this.heal(1.0F);
+                            this.heal(1.0F); // Хил босса пока живы слуги
                         }
-                        if (this.activeServant == null || !this.activeServant.isAlive() || this.activeServant.isRemoved()) {
+
+                        // Удаляем из списка мертвых или пропавших слуг
+                        this.activeServants.removeIf(s -> s == null || !s.isAlive() || s.isRemoved());
+
+                        // Проверяем, убиты ли ВСЕ слуги
+                        if (this.activeServants.isEmpty()) {
                             this.setConscriptDown(true);
                             this.conscriptCastTimer = 0;
                         }
@@ -322,7 +346,7 @@ public class BossEntity extends Monster implements GeoEntity {
                             this.setConscriptDown(false);
                             this.conscriptCastTimer = 0;
                             this.conscriptCooldown = 1200; // 60 секунд
-                            this.activeServant = null;
+                            this.activeServants.clear();
                         }
                     }
                     // ПРИОРИТЕТ 3: Лава

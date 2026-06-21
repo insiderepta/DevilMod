@@ -50,37 +50,37 @@ public class DemonFanItem extends Item {
                 Pair<BlockPos, Holder<Structure>> result = serverLevel.getChunkSource().getGenerator().findNearestMapStructure(
                         serverLevel, targetStructure, player.blockPosition(), 100, false
                 );
-
                 if (result != null) {
-                    BlockPos arenaPos = result.getFirst(); // Координаты найденной арены
+                    BlockPos arenaPos = result.getFirst();
 
-                    // Звук успешного броска
                     level.playSound(null, player.getX(), player.getY(), player.getZ(),
                             SoundEvents.ENDER_EYE_LAUNCH, SoundSource.NEUTRAL,
                             0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
 
-                    // Создаем и кидаем веер
                     DemonFanEntity fanEntity = new DemonFanEntity(level, player.getX(), player.getY(0.5D), player.getZ());
                     fanEntity.setItem(itemStack);
-
-                    // ПРИКАЗЫВАЕМ ВЕЕРУ ЛЕТЕТЬ К НАЙДЕННОЙ СТРУКТУРЕ!
                     fanEntity.signalTo(arenaPos);
 
                     level.addFreshEntity(fanEntity);
                     level.gameEvent(GameEvent.PROJECTILE_SHOOT, player.position(), GameEvent.Context.of(player));
 
+                    // ==========================================
+                    // НОВОЕ: АНТИ-ДЮП (Удаляем предмет из рук)
+                    // ==========================================
+                    if (!player.getAbilities().instabuild) {
+                        itemStack.shrink(1);
+                    }
+
                 } else {
-                    // Арена не найдена (Игрок далеко или в другом измерении)
                     player.displayClientMessage(net.minecraft.network.chat.Component.literal("§cАрена не найдена поблизости..."), true);
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1.0F, 1.0F);
                 }
             } else {
-                // Предупреждение в консоль, если ты неправильно указал название структуры
                 System.out.println("ОШИБКА DEVILMOD: Структура с таким именем не зарегистрирована!");
             }
         }
 
-        // Возвращаем предмет целым, он бесконечный
-        return InteractionResultHolder.success(itemStack);
+        // ИСПРАВЛЕНО: Возвращаем обновленный стак (он будет пустым, если мы его забрали)
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 }

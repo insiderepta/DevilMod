@@ -13,7 +13,6 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class ServantEyesLayer extends GeoRenderLayer<ServantEntity> {
-    // Жёстко прописываем путь к нашей текстуре глаз
     private static final ResourceLocation GLOW_TEXTURE = ResourceLocation.fromNamespaceAndPath(DevilMod.MOD_ID, "textures/entity/servant_glowing.png");
 
     public ServantEyesLayer(GeoRenderer<ServantEntity> entityRendererIn) {
@@ -22,10 +21,9 @@ public class ServantEyesLayer extends GeoRenderLayer<ServantEntity> {
 
     @Override
     public void render(PoseStack poseStack, ServantEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        // RenderType.eyes - это встроенный в Майнкрафт тип рендера для глаз (как у Эндермена или паука), он игнорирует темноту
-        RenderType eyesRenderType = RenderType.eyes(GLOW_TEXTURE);
+        // ИСПОЛЬЗУЕМ TranslucentEmissive ДЛЯ СОВМЕСТИМОСТИ С ШЕЙДЕРАМИ
+        RenderType eyesRenderType = RenderType.entityTranslucentEmissive(GLOW_TEXTURE);
 
-        // Рендерим текстуру поверх основной модели. Число 15728640 заставляет её светиться на максимальную яркость.
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, eyesRenderType,
                 bufferSource.getBuffer(eyesRenderType), partialTick, 15728640, OverlayTexture.NO_OVERLAY,
                 1f, 1f, 1f, 1f);

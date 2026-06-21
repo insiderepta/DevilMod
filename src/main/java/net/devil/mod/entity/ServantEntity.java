@@ -48,9 +48,11 @@ public class ServantEntity extends Monster implements GeoEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.30D) // Базовая скорость (быстрый шаг)
-                .add(Attributes.ATTACK_DAMAGE, 3.0D);
+                // Повышено ХП с 20.0D до 60.0D
+                .add(Attributes.MAX_HEALTH, 60.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.30D)
+                // Повышен базовый урон с 3.0D до 6.0D
+                .add(Attributes.ATTACK_DAMAGE, 6.0D);
     }
 
     // ==========================================
@@ -62,13 +64,11 @@ public class ServantEntity extends Monster implements GeoEntity {
 
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.NETHERITE_SWORD));
 
-        // ИСПРАВЛЕНО: Добавляем нормальные боевые инстинкты!
-        // Priority 2 - Атака
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.3D, false));
-        // Priority 1 - Поиск цели (он сам будет искать игрока, нам не нужно заставлять его кодом)
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
 
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(12.0D);
+        // Повышен урон в режиме миньона с 12.0D до 15.0D
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
 
         this.setPathfindingMalus(net.minecraft.world.level.pathfinder.BlockPathTypes.LAVA, 0.0F);
         this.setPathfindingMalus(net.minecraft.world.level.pathfinder.BlockPathTypes.DAMAGE_FIRE, 0.0F);

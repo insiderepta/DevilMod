@@ -21,8 +21,8 @@ public class BossEyesLayer extends GeoRenderLayer<BossEntity> {
 
     @Override
     public void render(PoseStack poseStack, BossEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        // Возвращаем RenderType.eyes. Он игнорирует черный фон текстуры и светится в темноте.
-        RenderType glowRenderType = RenderType.eyes(GLOW_TEXTURE);
+        // ИСПОЛЬЗУЕМ TranslucentEmissive ДЛЯ СОВМЕСТИМОСТИ С ШЕЙДЕРАМИ
+        RenderType glowRenderType = RenderType.entityTranslucentEmissive(GLOW_TEXTURE);
 
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, glowRenderType,
                 bufferSource.getBuffer(glowRenderType), partialTick, 15728640, OverlayTexture.NO_OVERLAY,
